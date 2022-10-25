@@ -1,4 +1,5 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+/* eslint-disable prettier/prettier */
+import { Column, Entity, ManyToOne,CreateDateColumn, PrimaryGeneratedColumn, JoinColumn } from 'typeorm';
 import { Event } from './event.entity';
 
 @Entity()
@@ -6,18 +7,18 @@ export class Workshop {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'datetime' })
+  @Column()
   start: string;
-
-  @Column({ type: 'datetime' })
+  @Column()
   end: string;
 
-  @Column({ type: 'integer', default: null })
-  eventId: number;
+  @ManyToOne(type => Event, event => event.id)
+  @JoinColumn({ name: "eventId"} )
+  event: Event;
 
   @Column()
   name: string;
 
-  @Column({ type: 'datetime' })
+  @CreateDateColumn({default: () => 'NOW()'})
   createdAt: string;
 }

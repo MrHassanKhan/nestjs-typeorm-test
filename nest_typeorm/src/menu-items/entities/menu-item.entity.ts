@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+/* eslint-disable prettier/prettier */
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, Tree, TreeChildren, TreeParent, ManyToOne, OneToMany, JoinColumn, JoinTable} from 'typeorm';
 
 @Entity()
 export class MenuItem {
@@ -11,9 +12,23 @@ export class MenuItem {
   @Column()
   url: string;
 
-  @Column({ type: 'integer', default: null })
+  @Column()
   parentId: number;
 
-  @Column({ type: 'datetime' })
+  @CreateDateColumn()
   createdAt: string;
+
+  // @TreeParent()
+  // parent: MenuItem
+
+  // @TreeChildren()
+  // children: MenuItem[]
+
+  @ManyToOne(type => MenuItem, menuItem => menuItem.children)
+  // @TreeParent()
+  parent: MenuItem
+
+  @OneToMany(type => MenuItem, menuItem => menuItem.parent)
+  // @TreeChildren()
+  children: MenuItem[]
 }

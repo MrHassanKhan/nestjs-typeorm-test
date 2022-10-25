@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { MenuItem } from './entities/menu-item.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, TreeRepository } from 'typeorm';
 
 @Injectable()
 export class MenuItemsService {
   constructor(
     @InjectRepository(MenuItem)
-    private menuItemRepository: Repository<MenuItem>,
+    private menuItemRepository: TreeRepository<MenuItem>,
   ) {}
 
   /* TODO: complete getMenuItems so that it returns a nested menu structure
@@ -86,6 +86,31 @@ export class MenuItemsService {
     ]
   */
   async getMenuItems() {
-    throw new Error('TODO in task 3');
+    const menuItems = await this.menuItemRepository.find();
+    return this.list_to_tree(menuItems);
   }
+
+
+
+  private list_to_tree(list:any[]) {
+    const map:any = {};
+    let node;
+    const roots = [];
+    for (let i = 0; i < list.length; i++) {
+      map[list[i].id] = i; // initialize the map
+      list[i].children = []; // initialize the children
+    }
+ 
+    for (let i = 0; i < list.length; i++) {
+      node = list[i];
+      if (node.parentId !== "0" && node.parentId !== null) {
+        // if you have dangling branches check that map[node.parentId] exists
+        list[map[node.parentId]].children.push(node);
+      } else {
+        roots.push(node);
+      }
+    }
+    return roots;
+  }
+  
 }
