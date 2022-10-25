@@ -17,6 +17,9 @@ export class DbSetUp1661860035294 implements MigrationInterface {
   name = 'DbSetUp1661860035294';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+    if(await queryRunner.hasTable("menu_item")) {
+      await queryRunner.dropTable("menu_item");
+    }
     await queryRunner.createTable(
       new Table({
         name: 'menu_item',
@@ -50,6 +53,9 @@ export class DbSetUp1661860035294 implements MigrationInterface {
       }),
     );
 
+    if(await queryRunner.hasTable("event")) {
+      await queryRunner.dropTable("event");
+    }
     await queryRunner.createTable(
       new Table({
         name: 'event',
@@ -71,6 +77,9 @@ export class DbSetUp1661860035294 implements MigrationInterface {
       }),
     );
 
+    if(await queryRunner.hasTable("workshop")) {
+      await queryRunner.dropTable("workshop");
+    }
     await queryRunner.createTable(
       new Table({
         name: 'workshop',
